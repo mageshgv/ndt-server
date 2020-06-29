@@ -48,11 +48,13 @@ func warnAndClose(writer http.ResponseWriter, message string) {
 
 // Download handles the download subtest.
 func (h Handler) Download(rw http.ResponseWriter, req *http.Request) {
+	defer req.Body.Close()
 	h.runMeasurement(spec.SubtestDownload, rw, req)
 }
 
 // Upload handles the upload subtest.
 func (h Handler) Upload(rw http.ResponseWriter, req *http.Request) {
+	defer req.Body.Close()
 	h.runMeasurement(spec.SubtestUpload, rw, req)
 }
 
@@ -126,8 +128,8 @@ func setupConn(writer http.ResponseWriter, request *http.Request) *websocket.Con
 		CheckOrigin: func(r *http.Request) bool {
 			return true // Allow cross origin resource sharing
 		},
-		ReadBufferSize:  spec.DefaultWebsocketBufferSize,
-		WriteBufferSize: spec.DefaultWebsocketBufferSize,
+		// ReadBufferSize:  spec.DefaultWebsocketBufferSize, // Use default buffer sizes to conserve memory
+		// WriteBufferSize: spec.DefaultWebsocketBufferSize,
 	}
 	conn, err := upgrader.Upgrade(writer, request, headers)
 	if err != nil {
