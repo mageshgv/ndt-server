@@ -1,21 +1,10 @@
 version: '3.7'
 services:
   ndt-server:
-    build:
-      context: .
-      dockerfile: Dockerfile.local
-    volumes:
-      - ./certs:/certs
-      - ./datadir:/datadir
-      - ./html:/html
+    image: mageshgv/speedtest
     cap_drop:
       - ALL
     ports:
       - "443:4443"
-    command: [
-      "./ndt-server",
-      "-cert", "/certs/cert.pem",
-      "-key", "/certs/key.pem",
-      "-datadir", "/datadir",
-      "-ndt7_addr", ":4443"
-    ]
+    command: >
+      ash -c "mkdir -p /certs && mkdir -p /datadir && ash /gen_local_test_certs.bash && /ndt-server -cert /certs/cert.pem -key /certs/key.pem -datadir /datadir  -ndt7_addr :4443 -ndt7_addr_cleartext :8080"
