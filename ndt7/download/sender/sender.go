@@ -44,7 +44,7 @@ func Start(ctx context.Context, conn *websocket.Conn, data *model.ArchivalData) 
 	defer mr.Stop(src)
 
 	logging.Logger.Debug("sender: generating random buffer")
-	bulkMessageSize := 1 << 13
+	bulkMessageSize := 1 << 18
 	preparedMessage, err := makePreparedMessage(bulkMessageSize)
 	if err != nil {
 		logging.Logger.WithError(err).Warn("sender: makePreparedMessage failed")
@@ -106,7 +106,8 @@ func Start(ctx context.Context, conn *websocket.Conn, data *model.ArchivalData) 
 			// scale deployments of this algorithm anyway, so there's no point
 			// in engaging in fine grained calibration before knowing.
 			totalSent += int64(bulkMessageSize)
-			if totalSent >= spec.MaxScaledMessageSize {
+			//if totalSent >= spec.MaxScaledMessageSize {
+			if bulkMessageSize*2 > spec.MaxScaledMessageSize {
 				continue // No further scaling is required
 			}
 			if int64(bulkMessageSize) > totalSent/spec.ScalingFraction {

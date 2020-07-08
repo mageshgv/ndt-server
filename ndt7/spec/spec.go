@@ -33,11 +33,12 @@ const DefaultWebsocketBufferSize = 1 << 20
 // the current binary message size is <= than 1/scalingFactor of the
 // amount of bytes sent so far, we scale the message. This is documented
 // in the appendix of the ndt7 specification.
-const ScalingFraction = 16
+// This is tweaked a bit in this experimental version using less bandwidth
+const ScalingFraction = 8
 
 // AveragePoissonSamplingInterval is the average of a lambda distribution
 // used to decide when to perform next measurement.
-const AveragePoissonSamplingInterval = 250 * time.Millisecond
+const AveragePoissonSamplingInterval = 50 * time.Millisecond
 
 // MinPoissonSamplingInterval is the min acceptable time that we want
 // the lambda distribution to return. Smaller values will be clamped
@@ -47,7 +48,7 @@ const MinPoissonSamplingInterval = 25 * time.Millisecond
 // MaxPoissonSamplingInterval is the max acceptable time that we want
 // the lambda distribution to return. Bigger values will be clamped
 // to be this value instead.
-const MaxPoissonSamplingInterval = 625 * time.Millisecond
+const MaxPoissonSamplingInterval = 250 * time.Millisecond
 
 // DefaultRuntime is the default runtime of a subtest
 const DefaultRuntime = 10 * time.Second
